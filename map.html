@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Camera Map iOS</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+  <style>
+    body { margin: 0; }
+    #map { height: 100vh; width: 100%; }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  // Tạo map (Đà Nẵng)
+  var map = L.map('map').setView([16.0544, 108.2022], 13);
+
+  // Load bản đồ
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  // Danh sách camera
+  var cameras = [
+    { id: "CAM-001", lat: 16.0544, lng: 108.2022, status: "online" },
+    { id: "CAM-002", lat: 16.0600, lng: 108.2100, status: "offline" },
+    { id: "CAM-003", lat: 16.0500, lng: 108.2200, status: "online" }
+  ];
+
+  // Icon màu
+  function getColor(status) {
+    return status === "online" ? "green" : "red";
+  }
+
+  // Vẽ camera
+  cameras.forEach(cam => {
+    var marker = L.circleMarker([cam.lat, cam.lng], {
+      radius: 8,
+      color: getColor(cam.status),
+      fillColor: getColor(cam.status),
+      fillOpacity: 0.8
+    }).addTo(map);
+
+    marker.bindPopup(
+      "<b>" + cam.id + "</b><br>" +
+      "Status: " + cam.status + "<br>" +
+      "<a href='https://www.google.com/maps/dir/?api=1&destination=" 
+      + cam.lat + "," + cam.lng + "' target='_blank'>Chỉ đường</a>"
+    );
+  });
+
+</script>
+
+</body>
+</html>
